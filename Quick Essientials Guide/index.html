@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DownSize Me Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        .guide-container {
+            max-width: 800px; /* Wider for booklet style */
+            margin: 2rem auto;
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            overflow: hidden; /* Ensures rounded corners are applied to content */
+        }
+        .guide-header {
+            background-color: #4f46e5; /* Indigo */
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .guide-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        .guide-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .guide-nav select, .guide-nav button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            background-color: #fff;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .guide-nav select:hover, .guide-nav button:hover {
+            background-color: #f9fafb;
+        }
+        .guide-nav button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .guide-content {
+            padding: 1.5rem 2rem; /* More padding for content */
+            min-height: 400px; /* Ensure content area has some height */
+        }
+        .guide-content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #4f46e5;
+            padding-bottom: 0.5rem;
+        }
+        .guide-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .guide-content p, .guide-content ul {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+        .guide-content ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        .guide-content li {
+            margin-bottom: 0.5rem;
+        }
+        .interactive-element {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .interactive-element h4 {
+            font-weight: 600;
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+        }
+        .reveal-btn {
+            background-color: #6366f1; /* Lighter Indigo */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .reveal-btn:hover {
+            background-color: #4f46e5;
+        }
+        .reveal-content {
+            display: none;
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            background-color: #fff;
+            border-radius: 0.375rem;
+            border: 1px dashed #d1d5db;
+        }
+        .checklist li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .checklist input[type="checkbox"] {
+            margin-right: 0.75rem;
+            accent-color: #4f46e5;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+        .tip-box {
+            background-color: #eff6ff; /* Light blue */
+            border-left: 4px solid #3b82f6; /* Blue border */
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.25rem;
+        }
+        .tip-box p {
+            color: #1e40af; /* Darker blue text */
+        }
+        .smart-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            margin-top: 0.25rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="guide-container">
+        <header class="guide-header">
+            <h1>DownSize Me Quick Essentials Guide</h1>
+        </header>
+
+        <nav class="guide-nav">
+            <button id="prev-btn">Previous</button>
+            <select id="section-select" class="w-1/2 md:w-1/3"></select>
+            <button id="next-btn">Next</button>
+        </nav>
+
+        <main id="guide-content-area" class="guide-content">
+            </main>
+    </div>
+
+    <script>
+        const guideSections = [
+            {
+                title: "Welcome",
+                id: "welcome",
+                content: `
+                    <h2>Welcome to Your Quick Essentials Guide!</h2>
+                    <p>This interactive guide is your companion to the full DownSize Me program. It's designed to give you a quick, practical reference as you work through each stage.</p>
+                    <p>Inside, you'll find a clear overview of the key steps, principles, and tools. Whether you're just starting out or need a refresher, this guide will help you stay focused and build a foundation for lasting success.</p>
+                    <h3>What You Can Expect in the First Two Weeks:</h3>
+                    <ul>
+                        <li><strong>Preparation and Goal Setting:</strong> Accurate weigh-in, clear goal weight, and organizing your kitchen.</li>
+                        <li><strong>Establishing Consistent Habits:</strong> Choosing your mealtime, planning meals, and applying the One Plate Rule.</li>
+                        <li><strong>Overcoming Challenges:</strong> Handling physical/mental shifts, managing cravings, and understanding hunger.</li>
+                        <li><strong>Motivation and Support:</strong> Tips to stay motivated and committed.</li>
+                    </ul>
+                    <p>This journey is about building sustainable habits to enjoy food without guilt, simplify your routine, and reclaim control over your health. Let's begin!</p>
+                    <div class="interactive-element">
+                        <h4>DownSize Me in a Nutshell:</h4>
+                        <p>DownSize Me is a simple, sustainable lifestyle that helps you take control of your health by eating just <strong>one satisfying meal a day within a one-hour window</strong>. This approach gives your body time to reset, burn fat, and develop a healthier relationship with food—without calorie counting or strict food rules.</p>
+                    </div>
+                `
+            },
+            {
+                title: "Preparation",
+                id: "preparation",
+                content: `
+                    <h2>Step 1: Preparation is Key</h2>
+                    <h3>Weigh Yourself Properly</h3>
+                    <p>Your morning weigh-in gives the most accurate reading. Remember to:</p>
+                    <ul class="checklist">
+                        <li><input type="checkbox" id="prepCheck1"><label for="prepCheck1">Weigh yourself <em>before</em> eating or drinking anything.</label></li>
+                        <li><input type="checkbox" id="prepCheck2"><label for="prepCheck2">Weigh yourself <em>after</em> using the toilet.</label></li>
+                    </ul>
+                    
+                    <h3>Determine Your Goal Weight</h3>
+                    <p>Use your morning weight as a baseline. Input your current weight, height, and age into a BMI calculator (like the one at <a href="https://www.calculator.net/bmi-calculator.html" target="_blank" class="text-indigo-600 hover:underline">calculator.net/bmi-calculator</a>) to find a healthy weight range.</p>
+                    <p><strong>Tip:</strong> Set your goal weight within this healthy range, ideally aiming for 10 lbs (5 kg) <em>below</em> your target healthy weight. This buffer helps maintain results when transitioning to maintenance.</p>
+                    <div class="interactive-element">
+                        <h4>My Goal Weight Note:</h4>
+                        <input type="text" class="smart-input" placeholder="My target healthy weight is...">
+                        <input type="text" class="smart-input mt-2" placeholder="My DownSize Me goal weight (with buffer) is...">
+                    </div>
+
+                    <h3>Arrange and Stock Your Kitchen</h3>
+                    <p>Set yourself up for success! Removing distractions and having healthy choices available makes your journey smoother.</p>
+                    <h4>Essential Stock:</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" id="kitchenCheck1"><label for="kitchenCheck1">Plenty of water (plain, sparkling, filtered).</label></li>
+                        <li><input type="checkbox" id="kitchenCheck2"><label for="kitchenCheck2">Tea and coffee (avoid milk/sugar if strict fasting; a small splash of milk is okay, or use artificial sweeteners like Stevia/Splenda).</label></li>
+                        <li><input type="checkbox" id="kitchenCheck3"><label for="kitchenCheck3">Other calorie-free beverages (0-10 calories max, check labels!).</label></li>
+                    </ul>
+                    <h4>Minimize Temptations:</h4>
+                    <ul class="checklist">
+                        <li><input type="checkbox" id="temptCheck1"><label for="temptCheck1">Minimize or remove tempting, high-calorie foods.</label></li>
+                        <li><input type="checkbox" id="temptCheck2"><label for="temptCheck2">Transfer trigger foods to blank containers to reduce visual cues from branding.</label></li>
+                    </ul>
+                     <div class="tip-box">
+                        <p><strong>Action Complete?</strong> Once you've completed these steps, you're well-prepared to start the DownSize Me Basics!</p>
+                    </div>
+                `
+            },
+            {
+                title: "SMART Goals",
+                id: "smart-goals",
+                content: `
+                    <h2>Set Your Goal The SMART Way</h2>
+                    <p>Setting a clear weight loss goal gives your journey direction. The SMART method helps define goals that are realistic, measurable, and motivating.</p>
+                    
+                    <div class="interactive-element">
+                        <h4>What are SMART Goals?</h4>
+                        <p>SMART is an acronym. Click each letter to learn more:</p>
+                        <button class="reveal-btn" data-target="smart-s">S - Specific</button>
+                        <div id="smart-s" class="reveal-content"><p>Set a clear and focused goal. Instead of "I want to lose weight," get precise: "I want to lose 10 kg and reach 70 kg to fall within my healthy BMI range."</p></div>
+                        
+                        <button class="reveal-btn mt-2" data-target="smart-m">M - Measurable</button>
+                        <div id="smart-m" class="reveal-content"><p>Use numbers to track progress. "I currently weigh 85 kg and will track my weight weekly to monitor progress toward my 70 kg goal."</p></div>
+
+                        <button class="reveal-btn mt-2" data-target="smart-a">A - Achievable</button>
+                        <div id="smart-a" class="reveal-content"><p>Set a realistic goal. Small, steady changes are more sustainable. "I will lose 1 kg every 1-2 weeks by following the One Plate Rule, eating at my chosen mealtime, and staying consistent."</p></div>
+
+                        <button class="reveal-btn mt-2" data-target="smart-r">R - Relevant</button>
+                        <div id="smart-r" class="reveal-content"><p>Choose a goal that matters to you. Connect it to your "why." "I want to lose weight to improve my energy levels, feel confident, and support my long-term health."</p></div>
+
+                        <button class="reveal-btn mt-2" data-target="smart-t">T - Time-Bound</button>
+                        <div id="smart-t" class="reveal-content"><p>Add a timeframe to stay motivated. "I aim to reach my first milestone of 5 kg lost within 4 weeks."</p></div>
+                    </div>
+
+                    <h3>My SMART Goal Statement:</h3>
+                    <p>Use the principles above to write your own SMART goal. This is for your personal reflection.</p>
+                    <textarea class="smart-input h-24" placeholder="Example: I want to lose 10 kg and reach 70 kg. I currently weigh 85 kg and will weigh myself weekly. I'll follow the One Plate Rule and stick to one meal a day. My goal is to lose 5 kg in the first 4 weeks to build momentum."></textarea>
+                    
+                    <div class="tip-box">
+                        <p><strong>Keep it Visible!</strong> Put your goal on your fridge, phone, or mirror. Seeing it daily reminds you why you started!</p>
+                    </div>
+                `
+            },
+            {
+                title: "The Basics",
+                id: "basics",
+                content: `
+                    <h2>The DownSize Me Basics</h2>
+                    
+                    <h3>1. Choose Your Meal Time</h3>
+                    <ul>
+                        <li><strong>Consistency is Key:</strong> Select a time that works best for you and stick to it daily (e.g., 5 pm).</li>
+                        <li><strong>Eat Once a Day (OMAD):</strong> Plan to eat just one main meal daily.</li>
+                        <li><strong>One-Hour Window:</strong> Finish your entire meal within one hour.</li>
+                        <li><strong>No Snacking Outside:</strong> Stick to calorie-free beverages outside your eating window.</li>
+                    </ul>
+
+                    <h3>2. Plan Your Meal in Advance</h3>
+                    <ul>
+                        <li><strong>Adds Anticipation:</strong> Gives you something to look forward to.</li>
+                        <li><strong>Prevents Bad Choices:</strong> Less likely to make last-minute, unhealthy choices. Ensures your meal is balanced and satisfying.</li>
+                    </ul>
+
+                    <h3>3. Eat From One Average-Sized Dinner Plate</h3>
+                    <ul>
+                        <li><strong>Portion Control:</strong> Use a standard 10-12 inch plate. Food shouldn't be piled too high or spilling. (More on this in "The One Plate Rule" section!)</li>
+                        <li><strong>Optional Caloric Drink:</strong> Enjoy one drink with calories (beer, wine) during your meal window if desired.</li>
+                    </ul>
+
+                    <h3>4. "Eat and Be Done with It"</h3>
+                    <div class="interactive-element">
+                        <h4>The DownSize Me Mindset:</h4>
+                        <p>After your meal, remember this mantra: <strong>"Eat and be done with it."</strong> This helps avoid lingering cravings or temptation to snack. Clear your plate immediately.</p>
+                    </div>
+                    
+                    <div class="tip-box">
+                        <p><strong>Bonus!</strong> After successfully completing the first 14 days of OMAD, you'll earn a Replenish Day. More on that later!</p>
+                    </div>
+                `
+            },
+            {
+                title: "One Plate Rule",
+                id: "one-plate-rule",
+                content: `
+                    <h2>Master The One Plate Rule</h2>
+                    <p>The One Plate Rule is a tool for portion control and self-discipline.</p>
+                    <h3>What is The One Plate Rule?</h3>
+                    <ul>
+                        <li><strong>Average Dinner Plate:</strong> Use a regular-sized plate, typically 10-12 inches (25-30 cm) in diameter.</li>
+                        <li><strong>Keep it Balanced:</strong> Fill with a variety of foods for satisfaction and nourishment, keeping the meal a reasonable size.</li>
+                        <li><strong>Avoid Overloading:</strong> Food shouldn't be piled more than 3 inches high. (Quick test: if you can tip your plate without anything falling off, you're good).</li>
+                        <li><strong>Note on Sugar:</strong> High-sugar items (cakes, ice cream) might leave you hungrier the next day. Enjoy treats occasionally, but don't make them the main part of your meal.</li>
+                    </ul>
+                    <h3>Putting The One Plate Rule Into Practice (Examples):</h3>
+                    <div class="interactive-element">
+                        <button class="reveal-btn" data-target="plate-example1">Family Gathering/BBQ</button>
+                        <div id="plate-example1" class="reveal-content"><p>Tempting to go for seconds or overload? Arrange food reasonably on one plate to satisfy cravings without going overboard.</p></div>
+                        
+                        <button class="reveal-btn mt-2" data-target="plate-example2">Fast-Food Favorites</button>
+                        <div id="plate-example2" class="reveal-content"><p>Want a mix? You could fit two burgers, some rice, and a few chicken nuggets on your plate, with a diet soda.</p></div>
+
+                        <button class="reveal-btn mt-2" data-target="plate-example3">Mixed Flavors (Sweet & Savory)</button>
+                        <div id="plate-example3" class="reveal-content"><p>Arrange them separately on your plate so they don't mix, giving you variety without crowding.</p></div>
+                    </div>
+                    <h3>Benefits of The One Plate Rule:</h3>
+                    <ul>
+                        <li><strong>Portion Control:</strong> Prevents overeating.</li>
+                        <li><strong>Self-Control:</strong> Develops self-discipline. Encourages "eating and being done."</li>
+                        <li><strong>Consistency:</strong> Easier to maintain your routine.</li>
+                    </ul>
+                    <div class="tip-box">
+                        <h4>Quick Recap:</h4>
+                        <ul class="checklist">
+                            <li><input type="checkbox" id="recapCheck1" disabled checked><label for="recapCheck1">All food on one average-sized plate (10-12 inches).</label></li>
+                            <li><input type="checkbox" id="recapCheck2" disabled checked><label for="recapCheck2">Don't overload; keep food manageable height.</label></li>
+                            <li><input type="checkbox" id="recapCheck3" disabled checked><label for="recapCheck3">No extra servings; eat and be done.</label></li>
+                            <li><input type="checkbox" id="recapCheck4" disabled checked><label for="recapCheck4">Optional: one caloric beverage.</label></li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "The First 14 Days",
+                id: "first-14-days",
+                content: `
+                    <h2>What to Expect: The First 14 Days</h2>
+                    <p>The first 14 days, the "adaptation phase," can be an eye-opener. Shifting to one meal a day has immediate effects. You might feel less bloated and see physical changes. However, hunger can hit hard after the first week. These challenges are signs of progress!</p>
+                    <h3>A List of Things You Might Experience:</h3>
+                    <div class="interactive-element">
+                        <button class="reveal-btn" data-target="exp1">The Runs</button>
+                        <div id="exp1" class="reveal-content"><p>Body adjusting to fewer meals, may temporarily affect digestion. Usually passes in a few days.</p></div>
+                        
+                        <button class="reveal-btn mt-2" data-target="exp2">Dull Headaches</button>
+                        <div id="exp2" class="reveal-content"><p>Can occur as your body adapts. Typically diminish over time.</p></div>
+
+                        <button class="reveal-btn mt-2" data-target="exp3">Fatigue, Dizziness, Irritability</button>
+                        <div id="exp3" class="reveal-content"><p>Body shifts to using stored fat for energy. Improves as body adjusts. <strong>Tips:</strong> Stay hydrated, eat nutrient-dense meals, prioritize sleep. Keep exercise light (e.g., 30-60 min brisk walk).</p></div>
+                        
+                        <button class="reveal-btn mt-2" data-target="exp4">Gallbladder Discomfort (Rare)</button>
+                        <div id="exp4" class="reveal-content"><p>Some may feel discomfort digesting larger meals, especially high-fat ones. Likely eases as body adapts.</p></div>
+                        
+                        <button class="reveal-btn mt-2" data-target="exp5">Insulin Spikes & Cravings</button>
+                        <div id="exp5" class="reveal-content"><p>Fasting may lead to cravings/blood sugar dips. After eating, insulin spikes may cause temporary energy boost, then a dip. Typically lessen. <strong>Tips:</strong> Add protein/fiber to meals. Hydrate. Consider a quick post-meal walk.</p></div>
+
+                        <button class="reveal-btn mt-2" data-target="exp6">Nostalgia Hunger</button>
+                        <div id="exp6" class="reveal-content"><p>Emotional cravings triggered by memories/scents. Pause, ask if it's true hunger. Try healthier alternatives.</p></div>
+                        
+                        <button class="reveal-btn mt-2" data-target="exp7">"Dieting Prison" Feeling</button>
+                        <div id="exp7" class="reveal-content"><p>OMAD's simplicity (one meal, no food group cutting) makes it flexible and sustainable, avoiding this feeling.</p></div>
+                    </div>
+                    <h3>Digestive Tips:</h3>
+                    <ul>
+                        <li>Drink Water: Stay hydrated.</li>
+                        <li>Eat Fiber-Rich Foods: Fruits, vegetables, whole grains.</li>
+                        <li>Eat Mindfully: Eat slowly.</li>
+                        <li>Stay Upright: Don't lie down immediately after eating.</li>
+                        <li>Apple Cider Vinegar: Some find relief consuming a bit 15-20 mins before meal.</li>
+                    </ul>
+                    <div class="tip-box">
+                        <h4>General Guidelines for First 14 Days:</h4>
+                        <ul class="checklist">
+                            <li><input type="checkbox" id="guideCheck1"><label for="guideCheck1">Stick to OMAD Basics closely.</label></li>
+                            <li><input type="checkbox" id="guideCheck2"><label for="guideCheck2">Stay Committed: If something doesn't go as planned, keep going. No cheating!</label></li>
+                            <li><input type="checkbox" id="guideCheck3"><label for="guideCheck3">Earn a Replenish Day: After 14 days of commitment, you earn a strategic break.</label></li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "Managing Hunger",
+                id: "managing-hunger",
+                content: `
+                    <h2>Understanding and Managing Hunger</h2>
+                    
+                    <h3>Identifying Illusionary Hunger ("Fake Hunger")</h3>
+                    <p>Cravings-based, not driven by body's need. Stems from habits, emotions, boredom.</p>
+                    <div class="interactive-element">
+                        <h4>Common Phrases for Illusionary Hunger:</h4>
+                        <ul><li>"Yeah, I could eat."</li><li>"Let's eat."</li><li>"I'm in the mood for..."</li></ul>
+                        <h4>Triggers:</h4>
+                        <ul><li>Visual Cues (food on TV/online)</li><li>Scent Triggers</li></ul>
+                        <p><strong>Why OMAD Helps:</strong> Reduces illusionary hunger over time as body adjusts.</p>
+                    </div>
+
+                    <h3>Recognizing Real Hunger</h3>
+                    <p>Body's actual need for energy/nourishment. Develops gradually.</p>
+                     <div class="interactive-element">
+                        <h4>Characteristics of Real Hunger:</h4>
+                        <ul><li>Not linked to specific food desires.</li><li>Builds slowly.</li><li>Indicates body's requirement for sustenance.</li></ul>
+                    </div>
+                    
+                    <h3>Stages of Hunger During Fasting (Click to Reveal)</h3>
+                     <div class="interactive-element">
+                        <button class="reveal-btn" data-target="hunger1">Stage 1: "I gotta eat something"</button>
+                        <div id="hunger1" class="reveal-content"><p>Mild hunger, early fasting. Emptiness, occasional cravings, mild irritability.</p></div>
+                        <button class="reveal-btn mt-2" data-target="hunger2">Stage 2: "I can't think"</button>
+                        <div id="hunger2" class="reveal-content"><p>Moderate hunger, mid-fasting. Cravings intensify, stomach growling, occasional light-headedness.</p></div>
+                        <button class="reveal-btn mt-2" data-target="hunger3">Stage 3: "What am I going to do?"</button>
+                        <div id="hunger3" class="reveal-content"><p>Intense hunger, late fasting. Strong cravings, reduced concentration, "hangry."</p></div>
+                        <button class="reveal-btn mt-2" data-target="hunger4">Stage 4: "This isn't right"</button>
+                        <div id="hunger4" class="reveal-content"><p>Extreme hunger, near mealtime. Dull headaches, "brain fog," shaking, fatigue.</p></div>
+                        <p class="mt-2"><strong>Note:</strong> Intense hunger is normal at first, becomes more manageable.</p>
+                    </div>
+
+                    <h3>Strategies to Help Manage Hunger:</h3>
+                    <ul>
+                        <li><strong>Stay Hydrated:</strong> Water, herbal tea, zero-calorie drinks.</li>
+                        <li><strong>Appetite Suppressants:</strong> Coffee and black tea (natural).</li>
+                        <li><strong>Plan Your Meals:</strong> Gives something to anticipate.</li>
+                        <li><strong>Nutritional Meals:</strong> High fiber/protein for longer satisfaction.</li>
+                        <li><strong>Stick to Your Meal Time:</strong> Consistency is key.</li>
+                        <li><strong>Distraction:</strong> Engage in activities/hobbies.</li>
+                    </ul>
+                    <div class="tip-box">
+                        <p><strong>Key Insight:</strong> It's important to <em>feel</em> hunger as it signals when your body needs food. Learning to manage it, not eliminate it, is crucial for success.</p>
+                    </div>
+                    <h4>Why OMAD Helps Manage Cravings:</h4>
+                    <p>By adhering to one meal a day, you train your body to recognize real hunger and reduce illusionary cravings. Over time, those nagging desires diminish.</p>
+                `
+            },
+            {
+                title: "9 Key Principles",
+                id: "key-principles",
+                content: `
+                    <h2>9 Key Principles of Successful Weight Loss</h2>
+                    <p>Click each principle to learn more:</p>
+                    <div class="interactive-element">
+                        <button class="reveal-btn w-full text-left mb-2" data-target="p1">1. It Costs Calories to Stay Big</button>
+                        <div id="p1" class="reveal-content"><p>Weight gain results from consuming more calories than needed. OMAD's structure helps create a calorie deficit naturally.</p></div>
+
+                        <button class="reveal-btn w-full text-left mb-2" data-target="p2">2. Calories In, Calories Out</button>
+                        <div id="p2" class="reveal-content"><p>Weight loss is about calories in vs. out. Nutritional value varies, but calorie count is key. OMAD simplifies staying in a deficit.</p></div>
+                        
+                        <button class="reveal-btn w-full text-left mb-2" data-target="p3">3. Avoid Restricting Food Groups</button>
+                        <div id="p3" class="reveal-content"><p>Restriction often leads to unsustainable diets. OMAD encourages moderation and flexibility within your single meal.</p></div>
+
+                        <button class="reveal-btn w-full text-left mb-2" data-target="p4">4. Losing Weight Can Be a "Lesser of Evils" Decision</button>
+                        <div id="p4" class="reveal-content"><p>Artificial sweeteners can make fasting easier for some without breaking the fast (in moderation). Use tools that make your journey easier without compromising your fast.</p></div>
+
+                        <button class="reveal-btn w-full text-left mb-2" data-target="p5">5. Pay Your Hunger Debt (Strategy > Willpower)</button>
+                        <div id="p5" class="reveal-content"><p>Success is more about strategy and consistency than pure willpower. OMAD's rules create structure, making habits easier to maintain.</p></div>
+
+                        <button class="reveal-btn w-full text-left mb-2" data-target="p6">6. You're More Productive on an Empty Stomach</button>
+                        <div id="p6" class="reveal-content"><p>After adaptation, many find increased focus and energy while fasting. Reduces brain fog and midday crashes.</p></div>
+
+                        <button class="reveal-btn w-full text-left mb-2" data-target="p7">7. Always Have a System to Control Food Intake</button>
+                        <div id="p7" class="reveal-content"><p>Commit to a lifelong strategy (OMAD, IF, calorie counting). Adapt as needed, but have a system.</p></div>
+
+                        <button class="reveal-btn w-full text-left mb-2" data-target="p8">8. Your Mind Will Play Tricks on You</button>
+                        <div id="p8" class="reveal-content"><p>Old habits can trigger hunger/cravings. Recognize the difference and trust the process. These feelings diminish.</p></div>
+
+                        <button class="reveal-btn w-full text-left mb-2" data-target="p9">9. Every Step Forward Counts</button>
+                        <div id="p9" class="reveal-content"><p>Perfection isn't necessary. Consistency matters most. Keep going, one day at a time.</p></div>
+                    </div>
+                `
+            },
+            {
+                title: "Replenish Days",
+                id: "replenish-days",
+                content: `
+                    <h2>Replenish Days: After The First 14 Days</h2>
+                    <h3>What is a Replenish Day?</h3>
+                    <p>A planned break from strict OMAD and fasting, where you can eat more freely with flexibility. <strong>Key: Plan meals in advance to maintain control.</strong> Provides a psychological and metabolic reset.</p>
+                    <p><strong>First Replenish Day:</strong> After your initial 14 days of OMAD, then one every seven days.</p>
+                    
+                    <h3>Do's and Don'ts (Click to Toggle)</h3>
+                    <div class="interactive-element">
+                        <details class="mb-2">
+                            <summary class="font-semibold cursor-pointer text-red-600">DON'Ts</summary>
+                            <ul class="mt-2 pl-4">
+                                <li>DON'T use it as a crutch for weakness.</li>
+                                <li>DON'T eat until uncomfortably full or sick.</li>
+                                <li>DON'T schedule Replenish Days back-to-back (especially early on).</li>
+                            </ul>
+                        </details>
+                        <details>
+                            <summary class="font-semibold cursor-pointer text-green-600">DO's</summary>
+                            <ul class="mt-2 pl-4">
+                                <li>DO use it to break through weight loss plateaus (high-calorie day can reset metabolism).</li>
+                                <li>DO use it to catch up on nutrients.</li>
+                                <li>DO leverage it to rebuild willpower (controlled indulgence prevents spontaneous overeating).</li>
+                            </ul>
+                        </details>
+                    </div>
+
+                    <h3>Tips for a Successful Replenish Day:</h3>
+                    <ul>
+                        <li><strong>Plan Ahead:</strong> Decide in advance what you'll eat. Stick to your plan!</li>
+                        <li><strong>Social Occasions:</strong> Consider aligning with birthdays, gatherings.</li>
+                        <li><strong>Embrace Balance:</strong> Enjoy without guilt; it's part of the strategy.</li>
+                        <li><strong>Transition Back:</strong> Return to regular OMAD the next day.</li>
+                    </ul>
+
+                    <h3>Avoiding The Dangers:</h3>
+                    <ul>
+                        <li><strong>Assess Self-Control:</strong> Be mindful of tendencies to overeat/binge.</li>
+                        <li><strong>Assessment Quiz:</strong> (The PDF mentions a "Replenish Day Risk Assessment Quiz" - if available, link here or provide a self-reflection version).</li>
+                        <li><strong>Monitor Your Experience:</strong> If multiple meals feel overwhelming, scale back.</li>
+                    </ul>
+                     <div class="tip-box">
+                        <h4>Replenish Day Recap:</h4>
+                        <ul class="checklist">
+                            <li><input type="checkbox" id="repCheck1" disabled checked><label for="repCheck1">Take the Risk Assessment Quiz (if applicable).</label></li>
+                            <li><input type="checkbox" id="repCheck2" disabled checked><label for="repCheck2">Plan meals in advance and adhere to them.</label></li>
+                            <li><input type="checkbox" id="repCheck3" disabled checked><label for="repCheck3">Avoid over-indulging and under-indulging.</label></li>
+                            <li><input type="checkbox" id="repCheck4" disabled checked><label for="repCheck4">Do not schedule Replenish Days consecutively.</label></li>
+                            <li><input type="checkbox" id="repCheck5" disabled checked><label for="repCheck5">Return to OMAD routine the following day.</label></li>
+                        </ul>
+                    </div>
+                `
+            },
+            {
+                title: "Next Steps",
+                id: "next-steps",
+                content: `
+                    <h2>Next Steps... Congratulations!</h2>
+                    <p>Finishing the initial phase (like the first 14 days) is a significant accomplishment! You should be proud. You've likely noticed positive changes in how you feel and look.</p>
+                    <h3>What's Next?</h3>
+                    <ul>
+                        <li><strong>Celebrate Your Progress:</strong> Reflect on your hard work and milestones.</li>
+                        <li><strong>Replenish Day:</strong> Reward yourself with a strategic, planned Replenish Day.</li>
+                        <li><strong>Continue Your DownSize Me Routine:</strong> Stick with the program, explore adjustments that work best for you (OMAD or other fasting strategies).</li>
+                        <li><strong>Set Long-Term Goals:</strong> Plan for maintaining weight, further loss, or muscle building, aligning with your wellness vision.</li>
+                    </ul>
+                    <div class="tip-box">
+                        <p><strong>Stay committed, stay disciplined.</strong> This journey is about building lifelong habits for your weight goals and overall well-being. Keep pushing forward—you've got this!</p>
+                        <p class="mt-2 font-semibold">- Gerald, DownSize Me Coach</p>
+                    </div>
+                `
+            }
+        ];
+
+        const guideContentArea = document.getElementById('guide-content-area');
+        const sectionSelect = document.getElementById('section-select');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        let currentSectionIndex = 0;
+
+        function loadSection(index) {
+            if (index < 0 || index >= guideSections.length) return;
+            
+            currentSectionIndex = index;
+            const section = guideSections[index];
+            guideContentArea.innerHTML = section.content;
+            sectionSelect.value = index;
+
+            updateNavButtons();
+            attachRevealListeners();
+        }
+
+        function updateNavButtons() {
+            prevBtn.disabled = currentSectionIndex === 0;
+            nextBtn.disabled = currentSectionIndex === guideSections.length - 1;
+        }
+
+        function populateSelect() {
+            guideSections.forEach((section, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = section.title;
+                sectionSelect.appendChild(option);
+            });
+        }
+        
+        function attachRevealListeners() {
+            const revealButtons = guideContentArea.querySelectorAll('.reveal-btn');
+            revealButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetId = button.dataset.target;
+                    const targetContent = document.getElementById(targetId);
+                    if (targetContent) {
+                        if (targetContent.style.display === 'block') {
+                            targetContent.style.display = 'none';
+                            // button.textContent = button.textContent.replace('Hide', 'Show'); // Basic toggle text
+                        } else {
+                            targetContent.style.display = 'block';
+                            // button.textContent = button.textContent.replace('Show', 'Hide'); // Basic toggle text
+                        }
+                    }
+                });
+            });
+        }
+
+        prevBtn.addEventListener('click', () => {
+            loadSection(currentSectionIndex - 1);
+        });
+
+        nextBtn.addEventListener('click', () => {
+            loadSection(currentSectionIndex + 1);
+        });
+
+        sectionSelect.addEventListener('change', (e) => {
+            loadSection(parseInt(e.target.value));
+        });
+
+        // Initial Load
+        populateSelect();
+        loadSection(0);
+
+    </script>
+</body>
+</html>
+
